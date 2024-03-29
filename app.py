@@ -1,6 +1,11 @@
 from flask import Flask, jsonify
+from database import db
 
 app = Flask(__name__)
+
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
+
+db.init_app(app)
 
 @app.route('/', methods=['GET'])
 def hello_world():
