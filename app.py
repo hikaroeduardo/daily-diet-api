@@ -1,5 +1,6 @@
 from flask import Flask, jsonify
 from database import db
+from models.models import User, Food
 
 app = Flask(__name__)
 
