@@ -2,9 +2,10 @@ from typing import List
 from database import db
 from sqlalchemy import Integer, String, ForeignKey, DateTime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from flask_login import UserMixin
 import datetime
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     __tablename__ = "user"
 
     id = mapped_column(Integer, primary_key=True)
@@ -14,7 +15,7 @@ class User(db.Model):
 
     foods: Mapped[List["Food"]] = relationship(back_populates="user", cascade="all, delete-orphan")
 
-class Food(db.Model):
+class Food(db.Model, UserMixin):
     __tablename__ = "food"
 
     id = mapped_column(Integer, primary_key=True)
