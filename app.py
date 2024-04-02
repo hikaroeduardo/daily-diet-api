@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request
 from database import db
 from models.models import User, Food
-from flask_login import LoginManager, login_user
+from flask_login import LoginManager, login_user, logout_user, login_required
 import bcrypt
 
 app = Flask(__name__)
@@ -15,7 +15,7 @@ login_manager.init_app(app)
 
 @login_manager.user_loader
 def user_loader(id):
-    return User.get(id)
+    return db.session.execute(db.select(User).filter_by(id=id)).scalar_one()
 
 @app.route('/register', methods=['POST'])
 def create_user():
@@ -51,6 +51,12 @@ def login():
         return jsonify({ "Message": "Usuário não encontrado." }), 404
     except KeyError:
         return jsonify({ "Message": "Todos os campos são obrigatórios." }), 400
+    
+@app.route('/logout', methods=['GET'])
+@login_required
+def logout():
+    logout_user()
+    return jsonify({ "Message": "Logout realizado com sucesso!" })
 
 if __name__ == "__main__":
     app.run(debug=True)
